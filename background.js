@@ -1,4 +1,3 @@
-//import { Conference } from './Conference.js'
 
 // On Install
 chrome.runtime.onInstalled.addListener(function () {
@@ -9,6 +8,7 @@ chrome.runtime.onInstalled.addListener(function () {
         contexts: ["selection"]
     })
 })
+
 
 // On context menu item clicked
 chrome.contextMenus.onClicked.addListener((info, tab) => {
