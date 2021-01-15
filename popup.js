@@ -1,5 +1,6 @@
 // Get all saved conferences
 chrome.storage.sync.get("conferences", (items) => {
+    // items: {conferences: Conference[]}
     // Get the template element
     var template = document.querySelector("#conferenceTempl").content
 
