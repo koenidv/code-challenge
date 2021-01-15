@@ -5,7 +5,7 @@ chrome.runtime.onInstalled.addListener(function () {
     chrome.contextMenus.create({
         id: "savetext",
         title: "Testeintrag!",
-        contexts: ["selection"]
+        contexts: ["selection", "link"]
     })
 })
 
@@ -17,7 +17,13 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     // First, get current items
     chrome.storage.sync.get("conferences", (items) => {
         var conferences = items.conferences
-        var thisConference = new Conference(info.selectionText, "notes", "platform", "link", "foundlink", 0, 1, 2)
+    
+        var thisConference = new Conference(info.selectionText, "notes", "platform", "link", info.pageUrl, 0, 1, 2)
+
+        // If only a link was selected
+        if (info.linkUrl) {
+            thisConference.link = info.linkUrl
+        }
 
         // If this is the first conference, create an array
         if (conferences === undefined) {
@@ -32,9 +38,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
             { "conferences": conferences },
             function () {
                 // Log the new value for testing purposes
-                chrome.storage.sync.get("conferences", (newItems) => {
-                    console.log(newItems.conferences)
-                })
+                chrome.storage.sync.get("conferences", (newItems) => {})
             }
         )
     })
