@@ -4,7 +4,7 @@ chrome.runtime.onInstalled.addListener((details) => {
     // Create a context menu
     chrome.contextMenus.create({
         id: "savetext",
-        title: "Testeintrag!",
+        title: "Save Conference",
         contexts: ["selection", "link"]
     })
 

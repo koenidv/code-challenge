@@ -10,11 +10,18 @@
     <script src="popup.js"></script>
     <template id="conferenceTempl">
         <div class="item">
-            <h2 id="title"></h2>
+            <h2 id="title" class="clickable"></h2>
             <p id="notes"></p>
             <a id="found">Open original post &rarr;</a> <!-- rarr: → -->
         </div>
     </template>
+
+    <!-- Placeholder if no conferences have been saved yet -->
+    <div class="item" id="placeholder" style="display:none; user-select: none;">
+        <h2 id="title">Save a conference, see it here</h2>
+        <p id="notes">Select any text or link invitation, right click and select Save Conference.</p>
+    </div>
+
 </body>
 
 <style>
@@ -37,8 +44,7 @@
         font-size: 1.25rem;
     }
 
-    #title:hover {
-        box-shadow: 0 0 0.1rem rgba(0, 0, 0, 0.1);
+    #title.clickable:hover {
         cursor: pointer;
     }
 

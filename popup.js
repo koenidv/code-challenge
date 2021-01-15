@@ -1,38 +1,44 @@
 // Get all saved conferences
 chrome.storage.sync.get("conferences", (items) => {
     // items: {conferences: Conference[]}
-    // Get the template element
-    var template = document.querySelector("#conferenceTempl").content
 
-    // Get content elements
-    var title = template.querySelector("#title")
-    var notes = template.querySelector("#notes")
-    var foundin = template.querySelector("#found")
+    if (items.conferences !== undefined && items.conferences.size != 0) {
 
-    // Add each conference's title as list element
-    for (conference of items.conferences) {
+        // Get the template element
+        var template = document.querySelector("#conferenceTempl").content
 
-        // Set contents within the template
+        // Get content elements
+        var title = template.querySelector("#title")
+        var notes = template.querySelector("#notes")
+        var foundin = template.querySelector("#found")
 
-        // Title href: conference url, and text
-        title.setAttribute("href", conference.link)
-        title.textContent = `${conference.title} \u2192` //u2192: →
+        // Add each conference's title as list element
+        for (conference of items.conferences) {
 
-        // User-set notes
-        notes.textContent = conference.notes
+            // Set contents within the template
 
-        // Original post href
-        foundin.href = conference.foundlink
-        
-        // Clone the template and add it to the body
-        document.body.appendChild(
-            document.importNode(template, true)
-        )
+            // Title href: conference url, and text
+            title.setAttribute("href", conference.link)
+            title.textContent = `${conference.title} \u2192` //u2192: →
+
+            // User-set notes
+            notes.textContent = conference.notes
+
+            // Original post href
+            foundin.href = conference.foundlink
+
+            // Clone the template and add it to the body
+            document.body.appendChild(
+                document.importNode(template, true)
+            )
+        }
+
+        // Set on click functions
+        setOnClick()
+
+    } else {
+        document.querySelector("#placeholder").style.display = "block"
     }
-
-    // Set on click functions
-    setOnClick()
-
 
 })
 
