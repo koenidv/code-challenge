@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<body>
+    <p>Default conference length</p>
+    <input type="number" placeholder="Length in minutes">
+    <p>Conferencing platforms</p>
+    <div id="platforms">
+        <template id="platform">
+            <input id="platformName" placeholder="Platform name">
+            <button id="deleteButton">X</button>
+        </template>
+    </div>
+    <button id="newPlatformButton">Add a platform...</button>
+
+    <script src="options.js"></script>
+</body>
+
+<style>
+    p,
+    body>input,
+    body>button {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+    #platforms>input {
+        width: calc(100% - 3.22rem);
+        margin: 0;
+        margin-bottom: 0.25rem;
+    }
+    #platforms>button {
+        width: 1rem;
+        margin: 0;
+    }
+</style>
+
+</html>
