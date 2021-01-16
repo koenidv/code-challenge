@@ -5,9 +5,11 @@
     <input type="number" placeholder="Length in minutes">
     <p>Conferencing platforms</p>
     <div id="platforms">
-        <template id="platform">
-            <input id="platformName" placeholder="Platform name">
-            <button id="deleteButton">X</button>
+        <template id="platformTempl">
+            <div id="platform">
+                <input id="platformName" placeholder="Platform name">
+                <button id="deleteButton">X</button>
+            </div>
         </template>
     </div>
     <button id="newPlatformButton">Add a platform...</button>
@@ -22,12 +24,14 @@
         width: 100%;
         margin: 0.5rem 0;
     }
-    #platforms>input {
+
+    #platforms input {
         width: calc(100% - 3.22rem);
         margin: 0;
         margin-bottom: 0.25rem;
     }
-    #platforms>button {
+
+    #platforms button {
         width: 1rem;
         margin: 0;
     }
