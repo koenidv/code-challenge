@@ -38,54 +38,31 @@ chrome.runtime.onInstalled.addListener((details) => {
 // On context menu item clicked
 chrome.contextMenus.onClicked.addListener((info, tab) => {
 
-    var thisConference = new Conference(info.selectionText, "notes", "platform", "link", info.pageUrl, 0, 1, 2)
+    // Get the next free index for saving
+    getNextIndex((index) => {
+        // Create the according Conference object
+        var thisConference = new Conference(
+            index,
+            info.selectionText,
+            "notes",
+            "platform",
+            "link",
+            info.pageUrl,
+            1, 2)
 
-    // If only a link was selected
-    if (info.linkUrl) {
-        thisConference.link = info.linkUrl
-    }
+        // If only a link was selected
+        if (info.linkUrl) {
+            thisConference.link = info.linkUrl
+        }
 
-    // Open a new window letting the user
-    // add data that couldn't be found
-    chrome.windows.create({
-        url: chrome.extension.getURL("edit.html")
-            + "?" + escape(JSON.stringify(thisConference)),
-        focused: true,
-        type: "popup"
-    });
-
-    /*
-        
-        // test saving some values to synced storage
-        // First, get current items
-        chrome.storage.sync.get("conferences", (items) => {
-            var conferences = items.conferences
-        
-            var thisConference = new Conference(info.selectionText, "notes", "platform", "link", info.pageUrl, 0, 1, 2)
-    
-            // If only a link was selected
-            if (info.linkUrl) {
-                thisConference.link = info.linkUrl
-            }
-    
-            // If this is the first conference, create an array
-            if (conferences === undefined) {
-                conferences = [thisConference]
-            } else {
-                // Else add this conference to the list
-                conferences.push(thisConference)
-            }
-    
-            // .. and save all to synced storage
-            chrome.storage.sync.set(
-                { "conferences": conferences },
-                function () {
-                    // Log the new value for testing purposes
-                    chrome.storage.sync.get("conferences", (newItems) => {})
-                }
-            )
-        })
-    
-        */
+        // Open a new window letting the user
+        // add data that couldn't be found
+        chrome.windows.create({
+            url: chrome.extension.getURL("edit.html")
+                + "?" + escape(JSON.stringify(thisConference)),
+            focused: true,
+            type: "popup"
+        });
+    })
 
 })

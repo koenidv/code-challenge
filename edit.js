@@ -1,6 +1,22 @@
 
-// Set up platforms selector
+// Get passed conference from url and set data
+if (window.location.href.includes("?")) {
+    // We're only passing one argument, therefore we'll just get everything
+    // behind ?. This should be a conference object
+    var conference = JSON.parse(unescape(
+        window.location.href.substr(
+            window.location.href.indexOf("?") + 1)))
 
+    // Set the conference's value to their respective text inputs
+    document.querySelector("#title").value = conference.title
+    document.querySelector("#notes").value = conference.notes
+    document.querySelector("#platform").value = conference.platform
+    document.querySelector("#conferenceLink").value = conference.link
+
+    console.log(conference)
+}
+
+// Set up platforms selector
 // Get platforms from synced storage
 chrome.storage.sync.get("platforms", (items) => {
     // items: {platforms: String[]}
@@ -14,17 +30,9 @@ chrome.storage.sync.get("platforms", (items) => {
     }
 })
 
-// Get passed conference from url and set data
-if (window.location.href.includes("?")) {
-    // We're only passing one argument, therefore we'll just get everything
-    // behind ?. This should be a conference object
-    var conference = JSON.parse(unescape(
-        window.location.href.substr(
-            window.location.href.indexOf("?") + 1)))
-
-    // Set the conference's value to their respective text inputs
-    document.querySelector("#title").value = conference.title
-    document.querySelector("#notes").value = conference.notes
-    document.querySelector("#platform").value = conference.platform
-
+// Save button
+// Set onclick as inline js is disabled
+document.querySelector("#saveButton").onclick = function () {
+    save(conference)
+    //window.close()
 }
