@@ -34,5 +34,8 @@ chrome.storage.sync.get("platforms", (items) => {
 // Set onclick as inline js is disabled
 document.querySelector("#saveButton").onclick = function () {
     save(conference)
-    //window.close()
+    window.close()
 }
+
+// Set window size, matching popup width
+window.resizeTo(28 * parseFloat(getComputedStyle(document.documentElement).fontSize), 600)

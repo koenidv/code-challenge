@@ -5,12 +5,75 @@
 </head>
 
 <body>
-    <input id="title" type="text" placeholder="Title">
-    <textarea id="notes" type="text" placeholder="Your notes"></textarea>
-    <select id="platform"></select>
-    <input id="conferenceLink" type="link" placeholder="Conference Link">
+    <label>Conference Details</label>
+    <input class="input" id="title" type="text" placeholder="Title">
+    <textarea class="input" id="notes" name="notes" type="text" placeholder="Your notes"></textarea>
+    <label>Platform and Link</label>
+    <select class="input" id="platform"></select>
+    <input class="input" id="conferenceLink" type="url" placeholder="Conference Link">
+    <label>Date and Time</label>
+    <input class="input" id="startTime" type="datetime-local">
+    <input class="input" id="endTime" type="datetime-local">
+
     <button id="saveButton">Save</button>
 
     <script src="database.js"></script>
     <script src="edit.js"></script>
 </body>
+
+<style>
+    body {
+        padding: 0.5rem;
+        margin: 0;
+        width: 26rem;
+    }
+
+    input,
+    select {
+        height: 2rem;
+    }
+
+    textarea {
+        min-height: 6rem;
+        resize: vertical;
+    }
+
+    label {
+        margin-top: 2rem;
+    }
+
+    .input {
+        width: 100%;
+        margin: 0.25rem 0;
+        box-sizing: border-box;
+        border: none;
+        border-bottom: 1px solid black;
+        background-color: #00000012;
+        border-top-right-radius: 0.2rem;
+        border-top-left-radius: 0.2rem;
+    }
+
+    #title {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    #notes {
+        font-size: 1.25rem;
+    }
+
+    #saveButton {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        height: 3rem;
+        width: 100%;
+        margin: 0;
+        color: white;
+        background-color: #ee0177;
+        border: none;
+        border-top-right-radius: 0.4rem;
+        border-top-left-radius: 0.4rem;
+    }
+</style>
