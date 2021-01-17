@@ -7,12 +7,14 @@
 <body>
     <!-- Show each conference, handled by popup.js -->
     <!-- Inline script execution is not enabled-->
+    <script src="database.js"></script>
     <script src="popup.js"></script>
     <template id="conferenceTempl">
-        <div class="item">
+        <div class="item" id="container">
             <h2 id="title" class="clickable"></h2>
             <p id="notes"></p>
             <a id="found">Open original post &rarr;</a> <!-- rarr: → -->
+            <p id="delete">(Remove)</p>
         </div>
     </template>
 
@@ -44,7 +46,8 @@
         font-size: 1.25rem;
     }
 
-    #title.clickable:hover {
+    #title.clickable:hover,
+    #delete:hover {
         cursor: pointer;
     }
 
@@ -53,12 +56,10 @@
         white-space: pre-line;
     }
 
-    #found {
+    #found, #delete {
         font-family: monospace;
         text-decoration: none;
         color: unset;
         font-size: 1rem;
     }
-
-
 </style>

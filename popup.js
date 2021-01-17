@@ -7,25 +7,24 @@ chrome.storage.sync.get("conferences", (items) => {
         // Get the template element
         var template = document.querySelector("#conferenceTempl").content
 
-        // Get content elements
-        var title = template.querySelector("#title")
-        var notes = template.querySelector("#notes")
-        var foundin = template.querySelector("#found")
+        // Get template elements
+        let container = template.querySelector("#container")
+        let title = template.querySelector("#title")
+        let notes = template.querySelector("#notes")
+        let foundin = template.querySelector("#found")
 
         // Add each conference's title as list element
         for (conference of items.conferences) {
-
-            console.log("=======================")
-            console.log(conference)
-
 
             // Time is saved as Int, but we need a Date object
             let starttime = new Date(conference.starttime)
 
             console.log(conference)
 
-
             // Set contents within the template
+
+            //Container id, so we can recognize this conference later
+            container.id = conference.id
 
             // Title href: conference url, and text
             title.setAttribute("href", conference.link)
@@ -58,6 +57,17 @@ chrome.storage.sync.get("conferences", (items) => {
 // This also means we create a two new functions for each item..
 // not ideal
 function setOnClick() {
+    // Remove link, remove conference from database
+    var deletes = document.querySelectorAll("#delete")
+    for (deleteLink of deletes) {
+        deleteLink.onclick = function () {
+            // Remove the conferences with the parent container's id from storage
+            remove(this.parentNode.id)
+            // Remove the parent from DOM
+            this.parentNode.remove() 
+        }
+    }
+    // Title, redirect to conference link
     var items = document.querySelectorAll("#title")
     for (item of items) {
         item.onclick = function () {
@@ -66,6 +76,7 @@ function setOnClick() {
     }
     // We need to set click functions for items and links seperately,
     // otherwise the item will use the links href
+    // Found in link, redirect to original post
     var links = document.querySelectorAll("a")
     for (link of links) {
         link.onclick = function () {

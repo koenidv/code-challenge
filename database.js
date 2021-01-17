@@ -33,6 +33,22 @@ function save(conference, callback) {
 }
 
 /**
+ * Remove a conference from storage by its id
+ */
+function remove(id) {
+    // Get currently saved conferences
+    chrome.storage.sync.get("conferences", (items) => {
+        // Get the item's index within the array
+        let index = items.conferences.find(element => element.id == id)
+        // If the items was found, remove it from the array and save to storage
+        if (index != -1) {
+            items.conferences.splice(index, 1)
+            chrome.storage.sync.set(items, () => { })
+        }
+    })
+}
+
+/**
  * Get the highest "auto increment" id in the database
  * and return it increased by 1
  * Storage is not synchronous, therefore we need to implement a callback
@@ -61,4 +77,3 @@ function getNextIndex(callback) {
         }
     })
 }
-
