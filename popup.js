@@ -15,14 +15,24 @@ chrome.storage.sync.get("conferences", (items) => {
         // Add each conference's title as list element
         for (conference of items.conferences) {
 
+            console.log("=======================")
+            console.log(conference)
+
+
+            // Time is saved as Int, but we need a Date object
+            let starttime = new Date(conference.starttime)
+
+            console.log(conference)
+
+
             // Set contents within the template
 
             // Title href: conference url, and text
             title.setAttribute("href", conference.link)
             title.textContent = `${conference.title} \u2192` //u2192: →
 
-            // User-set notes
-            notes.textContent = conference.notes
+            // Date and user-set notes
+            notes.textContent = `${starttime.getMonth() + 1}/${starttime.getDate()}\r\n${conference.notes}`
 
             // Original post href
             foundin.href = conference.foundlink

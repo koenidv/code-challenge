@@ -8,7 +8,7 @@
 /**
  * Save a conference object to synced storage
  */
-function save(conference) {
+function save(conference, callback) {
     // First, get current items
     chrome.storage.sync.get("conferences", (items) => {
         var conferences = items.conferences
@@ -25,7 +25,7 @@ function save(conference) {
         // .. and save all to synced storage
         chrome.storage.sync.set(
             { "conferences": conferences },
-            function () { }
+            function () { callback() }
         )
         // Other key/value combinations in storage
         // will not be affected by this

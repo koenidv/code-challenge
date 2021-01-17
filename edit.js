@@ -6,14 +6,19 @@ if (window.location.href.includes("?")) {
     var conference = JSON.parse(unescape(
         window.location.href.substr(
             window.location.href.indexOf("?") + 1)))
+    // Time is saved as Int, but we need a Date object
+    let starttime = new Date(conference.starttime)
+
+    console.log(conference)
+    console.log(starttime)
 
     // Set the conference's value to their respective text inputs
     document.querySelector("#title").value = conference.title
     document.querySelector("#notes").value = conference.notes
     document.querySelector("#platform").value = conference.platform
     document.querySelector("#conferenceLink").value = conference.link
+    document.querySelector("#startTime").value = starttime.toJSON().slice(0, 16)
 
-    console.log(conference)
 }
 
 // Set up platforms selector
@@ -33,8 +38,17 @@ chrome.storage.sync.get("platforms", (items) => {
 // Save button
 // Set onclick as inline js is disabled
 document.querySelector("#saveButton").onclick = function () {
-    save(conference)
-    window.close()
+    // Update conference object with the respective inputs
+    conference.title = document.querySelector("#title").value
+    conference.notes = document.querySelector("#notes").value
+    conference.platforms = document.querySelector("#platform").value
+    conference.link = document.querySelector("#conferenceLink").value
+    conference.starttime = new Date(document.querySelector("#startTime").value).getTime()
+
+    save(conference, () => {
+        // We need to wait for saving to complete before closing the popup
+        window.close()
+    })
 }
 
 // Set window size, matching popup width
