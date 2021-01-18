@@ -1,9 +1,8 @@
 // Get all saved conferences
-chrome.storage.sync.get("conferences", (items) => {
+get( (conferences) => {
     // items: {conferences: Conference[]}
 
-    console.log(items.conferences)
-    if (items.conferences !== undefined && items.conferences.length != 0) {
+    if (conferences.size != 0) {
 
         // Get the template element
         var template = document.querySelector("#conferenceTempl").content
@@ -15,7 +14,7 @@ chrome.storage.sync.get("conferences", (items) => {
         let foundin = template.querySelector("#found")
 
         // Add each conference's title as list element
-        for (conference of items.conferences) {
+        for (conference of conferences) {
 
             // Time is saved as Int, but we need a Date object
             let starttime = new Date(conference.starttime)
@@ -53,36 +52,48 @@ chrome.storage.sync.get("conferences", (items) => {
 
 })
 
-// Open a given url in a new tab per item and original post link
-// This is needed because regular links won't be opened
-// when clicked within the popup
-// This also means we create a two new functions for each item..
-// not ideal
 function setOnClick() {
-    // Remove link, remove conference from database
-    var deletes = document.querySelectorAll("#delete")
-    for (deleteLink of deletes) {
-        deleteLink.onclick = function () {
-            // Remove the conferences with the parent container's id from storage
-            remove(this.parentNode.id)
-            // Remove the parent from DOM
-            this.parentNode.remove() 
-        }
-    }
+    // Edit, open edit popup with this conference
+    setOnClick("#edit", function() {
+        // Open a new window letting the user edit the conference
+        chrome.windows.create({
+            url: chrome.extension.getURL("edit.html")
+                + "?" + escape(JSON.stringify(
+                    getById(this.parentNode.id)
+                )),
+            focused: true,
+            type: "popup"
+        })
+    })
+    // Remove, remove conference from database
+    setOnClick("#delete", function() {
+        // Remove the conferences with the parent container's id from storage
+        remove(this.parentNode.id)
+        // Remove the parent from DOM
+        this.parentNode.remove() 
+    })
+    
+    // Open a given url in a new tab per item and original post link
+    // This is needed because regular links won't be opened
+    // when clicked within the popup
+
     // Title, redirect to conference link
-    var items = document.querySelectorAll("#title")
-    for (item of items) {
-        item.onclick = function () {
-            chrome.tabs.create({ active: true, url: item.getAttribute("href") })
-        }
-    }
+    setOnClick("#title", function() {
+        chrome.tabs.create({ active: true, url: item.getAttribute("href") })
+    })
     // We need to set click functions for items and links seperately,
     // otherwise the item will use the links href
     // Found in link, redirect to original post
-    var links = document.querySelectorAll("a")
-    for (link of links) {
-        link.onclick = function () {
-            chrome.tabs.create({ active: true, url: link.href })
-        }
+    setOnClick("a", function() {
+        chrome.tabs.create({ active: true, url: link.href })
+    })
+}
+
+/*
+ * Set onclick for each element matching the query
+ */
+function setOnClick(query, onclick) {
+    for (item of document.querySelectorAll(query)) {
+        item.onclick = onclick
     }
 }
