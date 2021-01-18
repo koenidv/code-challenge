@@ -1,22 +1,48 @@
 
-// Currently using Chrome Synced Storage, not a database. 
+// Currently using Chrome Synced Storage, not a relational database. 
 // (Better implementation with extensions, synced accross devices)
 // This might not be the best solution, but handling everything
-// "database"-related in this file means we could easily
-// switch it up later
+// "database"-related in this file means it could easily be
+// switched up later
+
+/**
+ * Get all conferences from storage
+ * empty array if none are saved
+ */
+function get(callback) {
+    chrome.storage.sync.get("conferences", (items) => {
+        if (items.conferences == undefined) {
+            callback([])
+        } else {
+            callback(items.conferences)
+        }
+    }
+ }
+ 
+/** 
+ * Get a conference by its id
+ * undefined if no matching conference was found
+ */
+ function getById(id, callback) {
+    // Get all conferences and call back with the one with a matching id
+    get( (conferences) => {
+        callback(conferences.find( (element) => element.id == id )
+    })
+ }
 
 /**
  * Save a conference object to synced storage
  */
 function save(conference, callback) {
     // First, get current items
-    chrome.storage.sync.get("conferences", (items) => {
-        var conferences = items.conferences
+    get( (conferences) => {
         // conferences: Conference[]
 
-        // If this is the first conference, create an array
-        if (conferences === undefined) {
-            conferences = [conference]
+        // Update/create
+        // If there's already a conference with the same id, update it
+        let itemIndex = conferences.findIndex( (element) => element.id == conference.id )
+        if (itemIndex != -1) {
+            conferences[itemIndex] = conference
         } else {
             // Else add this conference to the list
             conferences.push(conference)
@@ -25,7 +51,7 @@ function save(conference, callback) {
         // .. and save all to synced storage
         chrome.storage.sync.set(
             { "conferences": conferences },
-            function () { callback() }
+            callback
         )
         // Other key/value combinations in storage
         // will not be affected by this
@@ -37,13 +63,13 @@ function save(conference, callback) {
  */
 function remove(id) {
     // Get currently saved conferences
-    chrome.storage.sync.get("conferences", (items) => {
+    get( (conferences) => {
         // Get the item's index within the array
-        let index = items.conferences.find(element => element.id == id)
+        let index = conferences.find(element => element.id == id)
         // If the items was found, remove it from the array and save to storage
         if (index != -1) {
-            items.conferences.splice(index, 1)
-            chrome.storage.sync.set(items, () => { })
+            conferences.splice(index, 1)
+            chrome.storage.sync.set({"conferences": conferences}, () => { })
         }
     })
 }
@@ -55,16 +81,16 @@ function remove(id) {
  */
 function getNextIndex(callback) {
     // Get currently saved conferences
-    chrome.storage.sync.get("conferences", (items) => {
+    get( (conferences) => {
         // If no conferences were added yet, return 0
-        if (items.conferences === undefined) {
+        if (conferences === undefined) {
             callback(0)
         } else {
             // Get the maximum of...
             var maxIndex = Math.max.apply(
                 Math,
                 // ...each conference's id
-                items.conferences.map(
+                conferences.map(
                     function (conference) {
                         return conference.id
                     }

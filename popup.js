@@ -1,8 +1,8 @@
 // Get all saved conferences
-chrome.storage.sync.get("conferences", (items) => {
+get( (conferences) => {
     // items: {conferences: Conference[]}
 
-    if (items.conferences !== undefined && items.conferences.size != 0) {
+    if (conferences.size != 0) {
 
         // Get the template element
         var template = document.querySelector("#conferenceTempl").content
@@ -14,7 +14,7 @@ chrome.storage.sync.get("conferences", (items) => {
         let foundin = template.querySelector("#found")
 
         // Add each conference's title as list element
-        for (conference of items.conferences) {
+        for (conference of conferences) {
 
             // Time is saved as Int, but we need a Date object
             let starttime = new Date(conference.starttime)
