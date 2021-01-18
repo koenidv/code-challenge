@@ -56,9 +56,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         var thisConference = new Conference(
             index,
             info.selectionText,
-            "notes",
-            "platform",
-            "link",
+            "",
+            "",
+            "",
             info.pageUrl,
             now, then)
 

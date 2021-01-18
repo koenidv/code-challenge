@@ -16,7 +16,7 @@ function get(callback) {
         } else {
             callback(items.conferences)
         }
-    }
+    })
  }
  
 /** 
@@ -26,7 +26,7 @@ function get(callback) {
  function getById(id, callback) {
     // Get all conferences and call back with the one with a matching id
     get( (conferences) => {
-        callback(conferences.find( (element) => element.id == id )
+        callback(conferences.find( (element) => element.id == id ))
     })
  }
 
@@ -97,7 +97,7 @@ function getNextIndex(callback) {
                 ))
 
             // If invalid ids were saved, return 0
-            if (isNaN(maxIndex)) callback(0)
+            if (isNaN(maxIndex) || maxIndex < 0) callback(0)
             // else return the max index plus 1
             else callback(maxIndex + 1)
         }

@@ -1,5 +1,5 @@
 // Get all saved conferences
-get( (conferences) => {
+get((conferences) => {
     // items: {conferences: Conference[]}
 
     if (conferences.size != 0) {
@@ -31,8 +31,8 @@ get( (conferences) => {
             title.textContent = `${conference.title} \u2192` //u2192: →
 
             // Date and user-set notes (M/d, H:m \n notes)
-            notes.textContent = `${starttime.getMonth() + 1}/${starttime.getDate()}, ${starttime.getHours()}:${starttime.getMinutes()}` + 
-            `\r\n${conference.notes}`
+            notes.textContent = `${starttime.getMonth() + 1}/${starttime.getDate()}, ${starttime.getHours()}:${starttime.getMinutes()}` +
+                `\r\n${conference.notes}`
 
             // Original post href
             foundin.href = conference.foundlink
@@ -44,7 +44,7 @@ get( (conferences) => {
         }
 
         // Set on click functions
-        setOnClick()
+        setOnClicks()
 
     } else {
         document.querySelector("#placeholder").style.display = "block"
@@ -52,40 +52,45 @@ get( (conferences) => {
 
 })
 
-function setOnClick() {
+function setOnClicks() {
     // Edit, open edit popup with this conference
-    setOnClick("#edit", function() {
-        // Open a new window letting the user edit the conference
-        chrome.windows.create({
-            url: chrome.extension.getURL("edit.html")
-                + "?" + escape(JSON.stringify(
-                    getById(this.parentNode.id)
-                )),
-            focused: true,
-            type: "popup"
+    setOnClick("#edit", function () {
+        // Get the respective conference object
+        console.log(this.parentNode.id)
+        getById(this.parentNode.id, (it) => {
+            console.log(it)
+            // Open a new window letting the user edit the conference
+            chrome.windows.create({
+                url: chrome.extension.getURL("edit.html")
+                    + "?" + escape(JSON.stringify(it)),
+                focused: true,
+                type: "popup"
+            })
+            // Close this popup
+            window.close()
         })
     })
     // Remove, remove conference from database
-    setOnClick("#delete", function() {
+    setOnClick("#delete", function () {
         // Remove the conferences with the parent container's id from storage
         remove(this.parentNode.id)
         // Remove the parent from DOM
-        this.parentNode.remove() 
+        this.parentNode.remove()
     })
-    
+
     // Open a given url in a new tab per item and original post link
     // This is needed because regular links won't be opened
     // when clicked within the popup
 
     // Title, redirect to conference link
-    setOnClick("#title", function() {
-        chrome.tabs.create({ active: true, url: item.getAttribute("href") })
+    setOnClick("#title", function () {
+        chrome.tabs.create({ active: true, url: this.getAttribute("href") })
     })
     // We need to set click functions for items and links seperately,
     // otherwise the item will use the links href
     // Found in link, redirect to original post
-    setOnClick("a", function() {
-        chrome.tabs.create({ active: true, url: link.href })
+    setOnClick("a", function () {
+        chrome.tabs.create({ active: true, url: this.href })
     })
 }
 
@@ -93,7 +98,7 @@ function setOnClick() {
  * Set onclick for each element matching the query
  */
 function setOnClick(query, onclick) {
-    for (item of document.querySelectorAll(query)) {
-        item.onclick = onclick
+    for (element of document.querySelectorAll(query)) {
+        element.onclick = onclick
     }
 }
