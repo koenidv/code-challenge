@@ -2,7 +2,8 @@
 chrome.storage.sync.get("conferences", (items) => {
     // items: {conferences: Conference[]}
 
-    if (items.conferences !== undefined && items.conferences.size != 0) {
+    console.log(items.conferences)
+    if (items.conferences !== undefined && items.conferences.length != 0) {
 
         // Get the template element
         var template = document.querySelector("#conferenceTempl").content
@@ -30,8 +31,9 @@ chrome.storage.sync.get("conferences", (items) => {
             title.setAttribute("href", conference.link)
             title.textContent = `${conference.title} \u2192` //u2192: →
 
-            // Date and user-set notes
-            notes.textContent = `${starttime.getMonth() + 1}/${starttime.getDate()}\r\n${conference.notes}`
+            // Date and user-set notes (M/d, H:m \n notes)
+            notes.textContent = `${starttime.getMonth() + 1}/${starttime.getDate()}, ${starttime.getHours()}:${starttime.getMinutes()}` + 
+            `\r\n${conference.notes}`
 
             // Original post href
             foundin.href = conference.foundlink

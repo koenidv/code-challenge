@@ -14,7 +14,9 @@
             <h2 id="title" class="clickable"></h2>
             <p id="notes"></p>
             <a id="found">Open original post &rarr;</a> <!-- rarr: → -->
-            <p id="delete">(Remove)</p>
+            <br>
+            <p id="edit">Edit &#9998;</p> <!-- 9998: ✎ -->
+            &emsp;&bull;&emsp;<p id="delete">Remove &#128465;</p> <!-- emsp: em space (wider than usual) ; bull: • ; 128465: 🗑 -->
         </div>
     </template>
 
@@ -47,6 +49,7 @@
     }
 
     #title.clickable:hover,
+    #edit:hover,
     #delete:hover {
         cursor: pointer;
     }
@@ -56,10 +59,17 @@
         white-space: pre-line;
     }
 
-    #found, #delete {
+    #found,
+    #edit,
+    #delete {
         font-family: monospace;
         text-decoration: none;
         color: unset;
         font-size: 1rem;
+    }
+
+    #edit,
+    #delete {
+        display: inline;
     }
 </style>

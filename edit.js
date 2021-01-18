@@ -44,6 +44,10 @@ document.querySelector("#saveButton").onclick = function () {
     conference.platforms = document.querySelector("#platform").value
     conference.link = document.querySelector("#conferenceLink").value
     conference.starttime = new Date(document.querySelector("#startTime").value).getTime()
+    
+    
+    // todo endtime = starttime + defaultLength
+
 
     save(conference, () => {
         // We need to wait for saving to complete before closing the popup
