@@ -2,7 +2,9 @@
 get((conferences) => {
     // items: {conferences: Conference[]}
 
-    if (conferences.size != 0) {
+    console.log(conferences)
+
+    if (conferences.length != 0) {
 
         // Get the template element
         var template = document.querySelector("#conferenceTempl").content
@@ -18,8 +20,6 @@ get((conferences) => {
 
             // Time is saved as Int, but we need a Date object
             let starttime = new Date(conference.starttime)
-
-            console.log(conference)
 
             // Set contents within the template
 
@@ -58,7 +58,6 @@ function setOnClicks() {
         // Get the respective conference object
         console.log(this.parentNode.id)
         getById(this.parentNode.id, (it) => {
-            console.log(it)
             // Open a new window letting the user edit the conference
             chrome.windows.create({
                 url: chrome.extension.getURL("edit.html")
@@ -74,6 +73,11 @@ function setOnClicks() {
     setOnClick("#delete", function () {
         // Remove the conferences with the parent container's id from storage
         remove(this.parentNode.id)
+        // If this was the last item (container still has 5 other elements),
+        // show the no data item
+        if (this.parentNode.parentNode.childElementCount == 6) {
+            document.querySelector("#placeholder").style.display = "block"
+        }
         // Remove the parent from DOM
         this.parentNode.remove()
     })

@@ -15,7 +15,6 @@ if (window.location.href.includes("?")) {
     // Set the conference's value to their respective text inputs
     document.querySelector("#title").value = conference.title
     document.querySelector("#notes").value = conference.notes
-    document.querySelector("#platform").value = conference.platform
     document.querySelector("#conferenceLink").value = conference.link
     document.querySelector("#startTime").value = starttime.toJSON().slice(0, 16)
 
@@ -29,10 +28,19 @@ chrome.storage.sync.get("platforms", (items) => {
     var selector = document.querySelector("#platform")
     for (item of items.platforms) {
         var option = document.createElement("option")
+
+        console.log(item + ", " + conference.platform)
+        // If this is the selected item, mark it
+        if (item == conference.platform) {
+            console.log("yep")
+            option.selected = "selected"
+        }
+
         option.value = item
         option.textContent = item
         selector.appendChild(option)
     }
+
 })
 
 // Save button
@@ -44,8 +52,8 @@ document.querySelector("#saveButton").onclick = function () {
     conference.platforms = document.querySelector("#platform").value
     conference.link = document.querySelector("#conferenceLink").value
     conference.starttime = new Date(document.querySelector("#startTime").value).getTime()
-    
-    
+
+
     // todo endtime = starttime + defaultLength
 
 

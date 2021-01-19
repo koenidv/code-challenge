@@ -16,7 +16,7 @@ chrome.runtime.onInstalled.addListener((details) => {
         // as the storage is synced and this might not be the first install
 
         // Platforms list and default duration
-        chrome.storage.sync.get([ "platforms", "defaultLength" ], (items) => {
+        chrome.storage.sync.get(["platforms", "defaultLength"], (items) => {
             // Set default platforms list if not already set
             if (items.platforms === undefined) {
                 chrome.storage.sync.set({
@@ -47,36 +47,57 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     // Get the next free index for saving
     getNextIndex((index) => {
 
-        // testing, use now as startdate
-        // and now + 90 minutes as enddate
-        let now = new Date().getTime()
-        let then = now + 90 * 60 * 1000
+        // We'll also need a list of used platforms
+        chrome.storage.sync.get("platforms", (items) => {
 
-        // Create the according Conference object
-        var thisConference = new Conference(
-            index,
-            info.selectionText,
-            "",
-            "",
-            "",
-            info.pageUrl,
-            now, then)
+            // testing, use now as startdate
+            // and now + 90 minutes as enddate
+            let now = new Date().getTime()
+            let then = now + 90 * 60 * 1000
 
-            console.log(thisConference)
+            // Try getting some values from the selected text
 
-        // If only a link was selected
-        if (info.linkUrl) {
-            thisConference.link = info.linkUrl
-        }
+            let url = null
+            // If only a link was selected, use that
+            if (info.linkUrl) {
+                url = info.linkUrl
+            } else if (info.selectionText.match(/https?:\/\//g)) {
+                // If selected text contains any "http(s)://", use that
+                // until the next whitespace as conference url
+                url = info.selectionText.match(/(https?:\/\/\S*)/g)[0]
+            }
 
-        // Open a new window letting the user
-        // add data that couldn't be found
-        chrome.windows.create({
-            url: chrome.extension.getURL("edit.html")
-                + "?" + escape(JSON.stringify(thisConference)),
-            focused: true,
-            type: "popup"
-        });
+            let platform = null
+            // Check if the selected text explicitly mentions a used platform
+            for (thisPlatform of items.platforms) {
+                if (info.selectionText.includes(thisPlatform)) {
+                    platform = thisPlatform
+                }
+            }
+
+            // Create the according Conference object
+            var thisConference = new Conference(
+                index,
+                null,
+                null,
+                platform,
+                url,
+                info.pageUrl,
+                now, then)
+
+                console.log(thisConference)
+
+            // Open a new window letting the user
+            // add data that couldn't be found
+            chrome.windows.create({
+                url: chrome.extension.getURL("edit.html")
+                    + "?" + escape(JSON.stringify(thisConference)),
+                focused: true,
+                type: "popup"
+            })
+
+        })
+
     })
 
 })

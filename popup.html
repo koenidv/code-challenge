@@ -21,7 +21,7 @@
     </template>
 
     <!-- Placeholder if no conferences have been saved yet -->
-    <div class="item" id="placeholder" style="display:none; user-select: none;">
+    <div class="item" id="placeholder" style="display:none">
         <h2 id="title">Save a conference, see it here</h2>
         <p id="notes">Select any text or link invitation, right click and select Save Conference.</p>
     </div>
@@ -32,6 +32,7 @@
     body {
         padding: 0;
         margin: 0;
+        user-select: none;
     }
 
     .item {
@@ -55,8 +56,13 @@
     }
 
     #notes {
+        overflow: hidden;
         font-size: 1rem;
         white-space: pre-line;
+        display: -webkit-box;
+        -webkit-line-clamp: 15;
+        -webkit-box-orient: vertical;
+        user-select: text;
     }
 
     #found,
