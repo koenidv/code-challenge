@@ -69,9 +69,11 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
             let platform = null
             // Check if the selected text explicitly mentions a used platform
-            for (thisPlatform of items.platforms) {
-                if (info.selectionText.includes(thisPlatform)) {
-                    platform = thisPlatform
+            if (info.selectionText != null) {
+                for (thisPlatform of items.platforms) {
+                    if (info.selectionText.includes(thisPlatform)) {
+                        platform = thisPlatform
+                    }
                 }
             }
 
@@ -85,7 +87,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
                 info.pageUrl,
                 now, then)
 
-                console.log(thisConference)
+            console.log(thisConference)
 
             // Open a new window letting the user
             // add data that couldn't be found

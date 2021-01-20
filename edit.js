@@ -18,6 +18,15 @@ if (window.location.href.includes("?")) {
     document.querySelector("#conferenceLink").value = conference.link
     document.querySelector("#startTime").value = starttime.toJSON().slice(0, 16)
 
+    // Request focus and save on enter
+    document.querySelector("#title").focus()
+    document.querySelector("#title").onkeydown = function (event) {
+        // Save the modified conference
+        if (event.key === 'Enter') {
+            saveThis()
+        }
+    }
+
 }
 
 // Set up platforms selector
@@ -46,6 +55,10 @@ chrome.storage.sync.get("platforms", (items) => {
 // Save button
 // Set onclick as inline js is disabled
 document.querySelector("#saveButton").onclick = function () {
+    saveThis()
+}
+
+function saveThis() {
     // Update conference object with the respective inputs
     conference.title = document.querySelector("#title").value
     conference.notes = document.querySelector("#notes").value
@@ -56,7 +69,7 @@ document.querySelector("#saveButton").onclick = function () {
 
     // todo endtime = starttime + defaultLength
 
-
+    // Save the conference
     save(conference, () => {
         // We need to wait for saving to complete before closing the popup
         window.close()
