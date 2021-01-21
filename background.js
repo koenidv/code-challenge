@@ -64,17 +64,19 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
             // If only a link was selected, use that
             if (info.linkUrl) {
                 url = info.linkUrl
-            } else if (info.selectionText.match(/https?:\/\//g)) {
+            } else if (info.selectionText.match(/https?:\/\//)) {
                 // If selected text contains any "http(s)://", use that
                 // until the next whitespace as conference url
                 url = info.selectionText.match(/(https?:\/\/\S*)/g)[0]
             }
 
             let platform = null
-            // Check if the selected text explicitly mentions a used platform
-            if (info.selectionText != null) {
+            console.log((info.selectionText ?? info.linkUrl))
+            // Check if the selected text or link explicitly mentions a used platform
+            if (info.selectionText ?? info.linkUrl != null) {
                 for (thisPlatform of items.platforms) {
-                    if (info.selectionText.includes(thisPlatform)) {
+                    if ((info.selectionText ?? info.linkUrl).toLowerCase()
+                        .match(new RegExp(thisPlatform.toLowerCase().replaceAll(" ", "\\s*")))) {
                         platform = thisPlatform
                     }
                 }

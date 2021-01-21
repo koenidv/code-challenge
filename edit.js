@@ -20,9 +20,11 @@ if (window.location.href.includes("?")) {
 
     // Request focus and save on enter
     document.querySelector("#title").focus()
-    document.querySelector("#title").onkeydown = function (event) {
-        // Save the modified conference
-        if (event.key === 'Enter') {
+
+    document.onkeyup = function (e) {
+        var evt = window.event || e;
+        if (evt.key == "Enter" && (evt.ctrlKey ||
+            document.querySelector("#title") == document.activeElement)) {
             saveThis()
         }
     }
@@ -58,10 +60,10 @@ document.querySelector("#saveButton").onclick = function () {
 
 function saveThis() {
     // Update conference object with the respective inputs
-    conference.title = document.querySelector("#title").value
-    conference.notes = document.querySelector("#notes").value
+    conference.title = document.querySelector("#title").value.trim()
+    conference.notes = document.querySelector("#notes").value.trim()
     conference.platforms = document.querySelector("#platform").value
-    conference.link = document.querySelector("#conferenceLink").value
+    conference.link = document.querySelector("#conferenceLink").value.trim()
     conference.starttime = new Date(document.querySelector("#startTime").value).getTime()
 
 

@@ -33,7 +33,7 @@ get((conferences) => {
             container.style.backgroundColor = `hsl(${conference.title.toHue()}, 70%, 80%)`
 
             // Date and user-set notes (M/d, H:m \n notes)
-            notes.textContent = `${starttime.calendar()} (${moment.duration(conference.starttime - conference.endtime, "milliseconds").humanize()}) on ${conference.platform}\r\n`
+            notes.textContent = `${starttime.calendar()} (${moment.duration(conference.endtime - conference.starttime, "milliseconds").humanize()}) on ${conference.platform}\r\n`
                 + conference.notes
 
             // Original post href
