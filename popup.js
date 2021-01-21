@@ -29,6 +29,8 @@ get((conferences) => {
             // Title href: conference url, and text
             title.setAttribute("href", conference.link)
             title.textContent = `${conference.title} \u2192` //u2192: →
+            // Background color, hue based on title, 70/80% sat/lightn. for a pastelly color
+            container.style.backgroundColor = `hsl(${conference.title.toHue()}, 70%, 80%)`
 
             // Date and user-set notes (M/d, H:m \n notes)
             notes.textContent = `${starttime.getMonth() + 1}/${starttime.getDate()}, ${starttime.getHours()}:${starttime.getMinutes()}` +
@@ -105,4 +107,20 @@ function setOnClick(query, onclick) {
     for (element of document.querySelectorAll(query)) {
         element.onclick = onclick
     }
+}
+
+/*
+ * Add a function to Strings to generate a color from them
+ */
+String.prototype.toHue = function() {
+    // If String is empty return 0 (black)
+    if (this.length === 0) return 0;
+    // Else get the String's hash
+    var hash = 0;
+    for (let i = 0; i < this.length; i++) {
+        hash = this.charCodeAt(i) + ((hash << 5) - hash);
+        hash = hash & hash;
+    }
+    // Hue is 0..360, so we can just use hash % that
+	return hash % 360;
 }
