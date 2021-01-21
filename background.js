@@ -44,6 +44,9 @@ chrome.runtime.onInstalled.addListener((details) => {
 // On context menu item clicked
 chrome.contextMenus.onClicked.addListener((info, tab) => {
 
+    console.log(info)
+    console.log(tab)
+
     // Get the next free index for saving
     getNextIndex((index) => {
 
@@ -76,6 +79,8 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
                     }
                 }
             }
+            // If no platform was found, set to Other
+            platform = platform ?? "Other"
 
             // Create the according Conference object
             var thisConference = new Conference(

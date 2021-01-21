@@ -38,10 +38,8 @@ chrome.storage.sync.get("platforms", (items) => {
     for (item of items.platforms) {
         var option = document.createElement("option")
 
-        console.log(item + ", " + conference.platform)
         // If this is the selected item, mark it
         if (item == conference.platform) {
-            console.log("yep")
             option.selected = "selected"
         }
 

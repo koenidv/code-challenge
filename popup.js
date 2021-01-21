@@ -18,8 +18,8 @@ get((conferences) => {
         // Add each conference's title as list element
         for (conference of conferences) {
 
-            // Time is saved as Int, but we need a Date object
-            let starttime = new Date(conference.starttime)
+            // Time is saved as Int, but we need a Moment object
+            let starttime = moment(conference.starttime)
 
             // Set contents within the template
 
@@ -33,8 +33,8 @@ get((conferences) => {
             container.style.backgroundColor = `hsl(${conference.title.toHue()}, 70%, 80%)`
 
             // Date and user-set notes (M/d, H:m \n notes)
-            notes.textContent = `${starttime.getMonth() + 1}/${starttime.getDate()}, ${starttime.getHours()}:${starttime.getMinutes()}` +
-                `\r\n${conference.notes}`
+            notes.textContent = `${starttime.calendar()} (${moment.duration(conference.starttime - conference.endtime, "milliseconds").humanize()}) on ${conference.platform}\r\n`
+                + conference.notes
 
             // Original post href
             foundin.href = conference.foundlink
@@ -75,9 +75,9 @@ function setOnClicks() {
     setOnClick("#delete", function () {
         // Remove the conferences with the parent container's id from storage
         remove(this.parentNode.id)
-        // If this was the last item (container still has 5 other elements),
+        // If this was the last item (container still has 6 other elements),
         // show the no data item
-        if (this.parentNode.parentNode.childElementCount == 6) {
+        if (this.parentNode.parentNode.childElementCount == 7) {
             document.querySelector("#placeholder").style.display = "block"
         }
         // Remove the parent from DOM
@@ -112,7 +112,7 @@ function setOnClick(query, onclick) {
 /*
  * Add a function to Strings to generate a color from them
  */
-String.prototype.toHue = function() {
+String.prototype.toHue = function () {
     // If String is empty return 0 (black)
     if (this.length === 0) return 0;
     // Else get the String's hash
@@ -122,5 +122,5 @@ String.prototype.toHue = function() {
         hash = hash & hash;
     }
     // Hue is 0..360, so we can just use hash % that
-	return hash % 360;
+    return hash % 360;
 }
