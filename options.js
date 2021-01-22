@@ -1,4 +1,13 @@
 
+// Setup connect google calendar button
+document.querySelector("#connectCalendar").onclick = function () {
+    // Let the user sign in with OAuth
+    chrome.identity.getAuthToken({ 'interactive': true }, function (token) {
+        console.log(token)
+    })
+    
+}
+
 // Set default event length input
 chrome.storage.sync.get("defaultLength", (items) => {
     // Items: {defaultLength: Int}

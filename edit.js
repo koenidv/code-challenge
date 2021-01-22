@@ -36,9 +36,12 @@ if (window.location.href.includes("?")) {
     // Save on ctrl+enter or enter if title is focused
     document.onkeyup = function (e) {
         var evt = window.event || e;
+        console.log(evt)
         if (evt.key == "Enter" && (evt.ctrlKey ||
             document.querySelector("#title") == document.activeElement)) {
             saveThis()
+        } else if (evt.key == "Escape") {
+            window.close()
         }
     }
 

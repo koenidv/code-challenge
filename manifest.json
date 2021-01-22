@@ -7,13 +7,16 @@
         "scripts": [
             "background.js",
             "Conference.js",
-            "database.js"
+            "database.js",
+            "calendar.min.js",
+            "calendarsync.js"
         ],
         "persistent": false
     },
     "permissions": [
         "contextMenus",
-        "storage"
+        "storage",
+        "identity"
     ],
     "icons": {
         "16": "16.png",
@@ -29,8 +32,7 @@
     "oauth2": {
         "client_id": "558579624647-p1bmhp0p8rvqsk1rvfuroak6aibjj8nc.apps.googleusercontent.com",
         "scopes": [
-          "https://www.googleapis.com/auth/calendar",
-          "https://www.googleapis.com/auth/calendar.readonly"
+          "https://www.googleapis.com/auth/calendar.events"
         ]
       },
       "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoBydhBvM0frV1Q2y6MYUiCJxgy0wBcOVLqIfr9ubv7euzK5c/m3Uke3SU+0qAz12xu+oBLSnNf7eim0cl5bejGgYPzVWlwyTbaKumHzDXqGOkcexh88yE7Jo4/xPq2uN7umwuwC7K2J7/NDh4VAJcjO+jj8nbpSY4gJ5GvPT8Lk7UkYHtER/sNM1N3MObo98yrPaHNbXchv0K45foJTJDKr0Vmg6ohvJdSukzmb9+7mq1LH3DrkXGay6miTluTGru9QgompV90ULzM4W+zOgLVIU+BltI7/gbdaruBO5V8JWEv7kFw7sjYR71dW6+Ra4ceRW8YlxXXQrvChRyicB7wIDAQAB"
