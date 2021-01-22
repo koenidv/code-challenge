@@ -18,9 +18,22 @@ if (window.location.href.includes("?")) {
     document.querySelector("#conferenceLink").value = conference.link
     document.querySelector("#startTime").value = starttime.toJSON().slice(0, 16)
 
-    // Request focus and save on enter
+
+    // Set the length input to the event's length
+    // or the default value from sync storage
+    if (conference.endtime != null) {
+        document.querySelector("#length").value =
+            (conference.endtime - conference.starttime) / 1000 / 60
+    } else {
+        chrome.storage.sync.get("defaultLength", (items) => {
+            document.querySelector("#length").value = items.defaultLength
+        })
+    }
+
+    // Request focus for title input
     document.querySelector("#title").focus()
 
+    // Save on ctrl+enter or enter if title is focused
     document.onkeyup = function (e) {
         var evt = window.event || e;
         if (evt.key == "Enter" && (evt.ctrlKey ||
@@ -65,6 +78,7 @@ function saveThis() {
     conference.platforms = document.querySelector("#platform").value
     conference.link = document.querySelector("#conferenceLink").value.trim()
     conference.starttime = new Date(document.querySelector("#startTime").value).getTime()
+    conference.endtime = conference.starttime + (document.querySelector("#length").value * 60 * 1000)
 
 
     // todo endtime = starttime + defaultLength

@@ -1,5 +1,5 @@
-// Get all saved conferences
-get((conferences) => {
+// Get all current saved conferences
+getCurrent((conferences) => {
     // items: {conferences: Conference[]}
 
     console.log(conferences)
