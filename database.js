@@ -107,31 +107,19 @@ function removeOld(callback) {
 }
 
 /**
- * Get the highest "auto increment" id in the database
- * and return it increased by 1
- * Storage is not synchronous, therefore we need to implement a callback
+ * Get the amount of created conferences, add one,
+ * use it as index and remember we created one more
  */
 function getNextIndex(callback) {
-    // Get currently saved conferences
-    get((conferences) => {
-        // If no conferences were added yet, return 0
-        if (conferences === undefined) {
-            callback(0)
-        } else {
-            // Get the maximum of...
-            var maxIndex = Math.max.apply(
-                Math,
-                // ...each conference's id
-                conferences.map(
-                    function (conference) {
-                        return conference.id
-                    }
-                ))
-
-            // If invalid ids were saved, return 0
-            if (isNaN(maxIndex) || maxIndex < 0) callback(0)
-            // else return the max index plus 1
-            else callback(maxIndex + 1)
-        }
+    // Get current number of conferences
+    chrome.storage.sync.get("conferenceIndex", (items) => {
+        // Increase by one or 0 if undefined
+        let nextIndex = items.conferenceIndex + 1
+        if (isNaN(nextIndex) || nextIndex == null) nextIndex = 0
+        // Save the new index
+        chrome.storage.sync.set({ "conferenceIndex": nextIndex}, () => {
+            // Call back with the now highest index
+            callback(nextIndex)
+        })
     })
 }

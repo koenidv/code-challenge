@@ -8,7 +8,6 @@
             "background.js",
             "Conference.js",
             "database.js",
-            "calendar.min.js",
             "calendarsync.js"
         ],
         "persistent": false
