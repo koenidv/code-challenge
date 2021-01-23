@@ -36,7 +36,6 @@ if (window.location.href.includes("?")) {
     // Save on ctrl+enter or enter if title is focused
     document.onkeyup = function (e) {
         var evt = window.event || e;
-        console.log(evt)
         if (evt.key == "Enter" && (evt.ctrlKey ||
             document.querySelector("#title") == document.activeElement)) {
             saveThis()
@@ -89,7 +88,7 @@ function saveThis() {
     // Save the conference
     save(conference, () => {
         // We need to wait for saving to complete before closing the popup
-        window.close()
+        //window.close()
     })
 }
 

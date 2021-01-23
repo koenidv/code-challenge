@@ -55,6 +55,8 @@ function save(conference, callback) {
         } else {
             // Else add this conference to the list
             conferences.push(conference)
+            // Try inserting into calendar
+            insertEvent(conference)
         }
 
         // .. and save all to synced storage
