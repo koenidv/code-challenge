@@ -52,22 +52,22 @@ function save(conference, callback) {
         let itemIndex = conferences.findIndex((element) => element.id == conference.id)
         if (itemIndex != -1) {
             conferences[itemIndex] = conference
-            // try updating calendar event
-            insertEvent(conference, conference.id)
         } else {
             // Else add this conference to the list
             conferences.push(conference)
-            // Try inserting into calendar
             insertEvent(conference)
         }
 
-        // .. and save all to synced storage
-        chrome.storage.sync.set(
-            { "conferences": conferences },
-            callback
-        )
-        // Other key/value combinations in storage
-        // will not be affected by this
+        // Try inserting into / updating calendar
+        insertEvent(conference, conference.id, () => {
+                // .. and save all to synced storage
+                // Other key/value combinations in storage
+                // will not be affected by this
+                chrome.storage.sync.set(
+                    { "conferences": conferences },
+                    callback
+                )
+        })
     })
 }
 
@@ -79,10 +79,13 @@ function remove(id) {
     get((conferences) => {
         // Get the item's index within the array
         let index = conferences.find(element => element.id == id)
-        // If the items was found, remove it from the array and save to storage
+        // If the items was found, remove it from the array and save the array
+        // Also delete from calendar
         if (index != -1) {
             conferences.splice(index, 1)
             chrome.storage.sync.set({ "conferences": conferences }, () => { })
+            // Try to remove the event from calendar
+            deleteEvent(id)
         }
     })
 }

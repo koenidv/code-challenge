@@ -75,9 +75,9 @@ function setOnClicks() {
     setOnClick("#delete", function () {
         // Remove the conferences with the parent container's id from storage
         remove(this.parentNode.id)
-        // If this was the last item (container still has 6 other elements),
+        // If this was the last item (container still has 7 other elements),
         // show the no data item
-        if (this.parentNode.parentNode.childElementCount == 7) {
+        if (this.parentNode.parentNode.childElementCount == 8) {
             document.querySelector("#placeholder").style.display = "block"
         }
         // Remove the parent from DOM
