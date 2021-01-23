@@ -58,41 +58,41 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
             let now = new Date().getTime()
             let then = now + 90 * 60 * 1000
 
+            // Create new Conference object
+            var thisConference = new Conference(
+                index,
+                null,
+                null,
+                null,
+                null,
+                info.pageUrl,
+                now, then)
+
             // Try getting some values from the selected text
 
-            let url = null
             // If only a link was selected, use that
             if (info.linkUrl) {
-                url = info.linkUrl
+                thisConference.link = info.linkUrl
             } else if (info.selectionText.match(/https?:\/\//)) {
                 // If selected text contains any "http(s)://", use that
                 // until the next whitespace as conference url
-                url = info.selectionText.match(/(https?:\/\/\S*)/g)[0]
+                thisConference.link = info.selectionText.match(/(https?:\/\/\S*)/g)[0]
+            } else if (info.selectionText.length <= 32) {
+                thisConference.title = info.selectionText
             }
 
-            let platform = null
             console.log((info.selectionText ?? info.linkUrl))
             // Check if the selected text or link explicitly mentions a used platform
             if (info.selectionText ?? info.linkUrl != null) {
                 for (thisPlatform of items.platforms) {
                     if ((info.selectionText ?? info.linkUrl).toLowerCase()
                         .match(new RegExp(thisPlatform.toLowerCase().replaceAll(" ", "\\s*")))) {
-                        platform = thisPlatform
+                        thisConference.platform = thisPlatform
                     }
                 }
             }
             // If no platform was found, set to Other
-            platform = platform ?? "Other"
-
-            // Create the according Conference object
-            var thisConference = new Conference(
-                index,
-                null,
-                null,
-                platform,
-                url,
-                info.pageUrl,
-                now, then)
+            thisConference.platform = thisConference.platform ?? "Other"
 
             console.log(thisConference)
 

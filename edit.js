@@ -82,8 +82,8 @@ function saveThis() {
     conference.starttime = new Date(document.querySelector("#startTime").value).getTime()
     conference.endtime = conference.starttime + (document.querySelector("#length").value * 60 * 1000)
 
-
-    // todo endtime = starttime + defaultLength
+    // Disable save button whilst saving
+    document.querySelector("#saveButton").disabled = true
 
     // Save the conference
     save(conference, () => {
