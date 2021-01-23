@@ -44,9 +44,6 @@ chrome.runtime.onInstalled.addListener((details) => {
 // On context menu item clicked
 chrome.contextMenus.onClicked.addListener((info, tab) => {
 
-    console.log(info)
-    console.log(tab)
-
     // Get the next free index for saving
     getNextIndex((index) => {
 
@@ -81,7 +78,6 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
                 thisConference.title = info.selectionText
             }
 
-            console.log((info.selectionText ?? info.linkUrl))
             // Check if the selected text or link explicitly mentions a used platform
             if (info.selectionText ?? info.linkUrl != null) {
                 for (thisPlatform of items.platforms) {

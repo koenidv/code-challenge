@@ -29,6 +29,13 @@ function insertEvent(conference, idToUpdate, callback) {
                 },
                 "end": {
                     "dateTime": new Date(conference.endtime).toISOString()
+                },
+                "reminders": {
+                    // Notify 10 minutes before conference start
+                    "useDefault": false,
+                    "overrides": [
+                        { "method": "popup", "minutes": 10 }
+                    ]
                 }
             }
 
@@ -73,7 +80,7 @@ function insertEvent(conference, idToUpdate, callback) {
         if (retry) {
             retry = false;
             // Remove cached token
-            chrome.identity.removeCachedAccessToken({ "token": token }, () => {
+            chrome.identity.removeCachedAuthToken({ "token": token }, () => {
                 run()
             })
         } else {
@@ -95,6 +102,13 @@ function deleteEvent(id) {
     function run() {
         // interactive false: Get an error if user isn't signed in
         chrome.identity.getAuthToken({ 'interactive': false }, function (token) {
+
+            // Return if an error occurred, like if the user isn't signed in
+            if (chrome.runtime.lastError) {
+                callback();
+                return;
+            }
+
             // Delete request to calendar rest api
             fetch("https://www.googleapis.com/calendar/v3/calendars/primary/events/conferenceplanner" + id, {
                 method: "delete",
@@ -118,7 +132,7 @@ function deleteEvent(id) {
         if (retry) {
             retry = false;
             // Remove cached token
-            chrome.identity.removeCachedAccessToken({ "token": token }, () => {
+            chrome.identity.removeCachedAuthToken({ "token": token }, () => {
                 run()
             })
         }
