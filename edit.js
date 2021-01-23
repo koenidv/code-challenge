@@ -1,4 +1,13 @@
 
+const title = document.querySelector("#title")
+const notes = document.querySelector("#notes")
+const platform = document.querySelector("#platform")
+const link = document.querySelector("#conferenceLink")
+const start = document.querySelector("#startTime")
+const length = document.querySelector("#length")
+const saveBtn = document.querySelector("#saveButton")
+
+
 // Get passed conference from url and set data
 if (window.location.href.includes("?")) {
     // We're only passing one argument, therefore we'll just get everything
@@ -13,31 +22,30 @@ if (window.location.href.includes("?")) {
     console.log(starttime)
 
     // Set the conference's value to their respective text inputs
-    document.querySelector("#title").value = conference.title
-    document.querySelector("#notes").value = conference.notes
-    document.querySelector("#conferenceLink").value = conference.link
-    document.querySelector("#startTime").value = starttime.toJSON().slice(0, 16)
+    title.value = conference.title
+    notes.value = conference.notes
+    link.value = conference.link
+    start.value = starttime.toJSON().slice(0, 16)
 
 
     // Set the length input to the event's length
     // or the default value from sync storage
     if (conference.endtime != null) {
-        document.querySelector("#length").value =
+        length.value =
             (conference.endtime - conference.starttime) / 1000 / 60
     } else {
         chrome.storage.sync.get("defaultLength", (items) => {
-            document.querySelector("#length").value = items.defaultLength
+            length.value = items.defaultLength
         })
     }
 
     // Request focus for title input
-    document.querySelector("#title").focus()
+    title.focus()
 
     // Save on ctrl+enter or enter if title is focused
     document.onkeyup = function (e) {
         var evt = window.event || e;
-        if (evt.key == "Enter" && (evt.ctrlKey ||
-            document.querySelector("#title") == document.activeElement)) {
+        if (evt.key == "Enter" && (evt.ctrlKey || title == document.activeElement)) {
             saveThis()
         } else if (evt.key == "Escape") {
             window.close()
@@ -51,7 +59,6 @@ if (window.location.href.includes("?")) {
 chrome.storage.sync.get("platforms", (items) => {
     // items: {platforms: String[]}
     // Add each saved platform to the selector
-    var selector = document.querySelector("#platform")
     for (item of items.platforms) {
         var option = document.createElement("option")
 
@@ -62,34 +69,48 @@ chrome.storage.sync.get("platforms", (items) => {
 
         option.value = item
         option.textContent = item
-        selector.appendChild(option)
+        platform.appendChild(option)
     }
 
 })
 
 // Save button
 // Set onclick as inline js is disabled
-document.querySelector("#saveButton").onclick = function () {
+saveBtn.onclick = function () {
     saveThis()
 }
 
 function saveThis() {
+    let valid = true
+
     // Update conference object with the respective inputs
-    conference.title = document.querySelector("#title").value.trim()
-    conference.notes = document.querySelector("#notes").value.trim()
-    conference.platforms = document.querySelector("#platform").value
-    conference.link = document.querySelector("#conferenceLink").value.trim()
-    conference.starttime = new Date(document.querySelector("#startTime").value).getTime()
-    conference.endtime = conference.starttime + (document.querySelector("#length").value * 60 * 1000)
+    conference.title = title.value.trim()
+    conference.notes = notes.value.trim()
+    conference.platforms = platform.value
+    conference.link = link.value.trim()
+    conference.starttime = new Date(start.value).getTime()
+    conference.endtime = conference.starttime + (length.value * 60 * 1000)
 
-    // Disable save button whilst saving
-    document.querySelector("#saveButton").disabled = true
+    // Don't continue if no title or date is specified
+    if (!conference.title) {
+        title.classList.add("error")
+        valid = false
+    }
+    if (!start.value) {
+        start.classList.add("error")
+        valid = false
+    }
 
-    // Save the conference
-    save(conference, () => {
-        // We need to wait for saving to complete before closing the popup
-        window.close()
-    })
+    if (valid) {
+        // Disable save button whilst saving
+        saveBtn.disabled = true
+
+        // Save the conference
+        save(conference, () => {
+            // We need to wait for saving to complete before closing the popup
+            window.close()
+        })
+    }
 }
 
 // Set window size, matching popup width
