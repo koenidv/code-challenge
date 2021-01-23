@@ -48,25 +48,26 @@ function save(conference, callback) {
         // conferences: Conference[]
 
         // Update/create
-        // If there's already a conference with the same id, update it
         let itemIndex = conferences.findIndex((element) => element.id == conference.id)
+        let id = null
         if (itemIndex != -1) {
+            // If there's already a conference with the same id, update it
             conferences[itemIndex] = conference
+            id = conference.id
         } else {
             // Else add this conference to the list
             conferences.push(conference)
-            insertEvent(conference)
         }
 
         // Try inserting into / updating calendar
-        insertEvent(conference, conference.id, () => {
-                // .. and save all to synced storage
-                // Other key/value combinations in storage
-                // will not be affected by this
-                chrome.storage.sync.set(
-                    { "conferences": conferences },
-                    callback
-                )
+        insertEvent(conference, id, () => {
+            // .. and save all to synced storage
+            // Other key/value combinations in storage
+            // will not be affected by this
+            chrome.storage.sync.set(
+                { "conferences": conferences },
+                callback
+            )
         })
     })
 }
@@ -124,7 +125,7 @@ function getNextIndex(callback) {
         let nextIndex = items.conferenceIndex + 1
         if (isNaN(nextIndex) || nextIndex == null) nextIndex = 0
         // Save the new index
-        chrome.storage.sync.set({ "conferenceIndex": nextIndex}, () => {
+        chrome.storage.sync.set({ "conferenceIndex": nextIndex }, () => {
             // Call back with the now highest index
             callback(nextIndex)
         })

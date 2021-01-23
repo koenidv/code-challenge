@@ -88,7 +88,8 @@ function saveThis() {
     // Save the conference
     save(conference, () => {
         // We need to wait for saving to complete before closing the popup
-        window.close()
+        //window.close()
+        console.log("saved")
     })
 }
 
