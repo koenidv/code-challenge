@@ -52,6 +52,8 @@ function save(conference, callback) {
         let itemIndex = conferences.findIndex((element) => element.id == conference.id)
         if (itemIndex != -1) {
             conferences[itemIndex] = conference
+            // try updating calendar event
+            insertEvent(conference, conference.id)
         } else {
             // Else add this conference to the list
             conferences.push(conference)

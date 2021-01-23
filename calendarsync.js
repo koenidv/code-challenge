@@ -1,8 +1,9 @@
 
 /**
  * Insert an conference event to Google Calendar
+ * Pass idToUpdate to update an existing event, or leave empty to create a new one
  */
-function insertEvent(conference) {
+function insertEvent(conference, idToUpdate) {
 
     // Calendar event data
     const data = {
@@ -18,12 +19,19 @@ function insertEvent(conference) {
         }
     }
 
+    // Use post for create, put for update and set url accordingly
+    let url = "https://www.googleapis.com/calendar/v3/calendars/primary/events"
+    let method = "post"
+    if (idToUpdate) {
+        url += "/conferenceplanner" + conference.id
+        method = "put"
+    }
+
     // interactive false: Get an error if user isn't signed in
     chrome.identity.getAuthToken({ 'interactive': false }, function (token) {
-        console.log(token)
         // Post request to calendar rest api
-        fetch("https://www.googleapis.com/calendar/v3/calendars/primary/events", {
-                    method: "post",
+        fetch(url, {
+                    method: method,
                     headers: {
                         // Don't forget authorization :)
                         'Authorization': 'Bearer ' + token,
