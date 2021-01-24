@@ -118,12 +118,21 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         // Show a notification
         chrome.notifications.create(conference.id.toString(), {
             title: conference.title,
-            message: "Get ready for your conference in about 15 minutes!",
-            contextMessage: conference.notes,
+            message: `Get ready for your conference on ${conference.platform}!\r\n${conference.notes}`,
             iconUrl: "128.png",
             eventTime: conference.starttime,
-            requireIntercation: true,
             type: "basic"
         }, () => { })
+    })
+})
+
+/**
+ * Listen for clicks on a notification to redirect to the specified link
+ */
+chrome.notifications.onClicked.addListener((notificationId) => {
+    // Get the corresponding conference
+    getById(notificationId, (conference) => {
+        // Open its link in a new tab
+        chrome.tabs.create({ url: conference.link })
     })
 })

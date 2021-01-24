@@ -47,6 +47,11 @@ function save(conference, callback) {
     get((conferences) => {
         // conferences: Conference[]
 
+        // Make sure conference link is absolute
+        if (!conference.link.match(/https?:\/\//))  {
+            conference.link = "https://" + conference.link
+        }
+
         // Update/create
         let itemIndex = conferences.findIndex((element) => element.id == conference.id)
         let id = null
