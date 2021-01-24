@@ -86,4 +86,25 @@
     #saveButton:disabled {
         background-color: grey;
     }
+
+    @media (prefers-color-scheme: dark) {
+        body {
+            background-color: #121212;
+            color: #aeaeae;
+        }
+
+        .input {
+            border-bottom: 1px solid #aeaeae;
+            background-color: #aeaeae12;
+            color: white;
+        }
+
+        .input.error {
+            background-color: #7f194a80;
+        }
+
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+    }
 </style>

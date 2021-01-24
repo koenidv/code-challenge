@@ -18,7 +18,8 @@
             <a id="found">Open original post &rarr;</a> <!-- rarr: → -->
             <br>
             <p id="edit">Edit &#9998;</p> <!-- 9998: ✎ -->
-            &emsp;&bull;&emsp;<p id="delete">Remove &#128465;</p> <!-- emsp: em space (wider than usual) ; bull: • ; 128465: 🗑 -->
+            &emsp;&bull;&emsp;<p id="delete">Remove &#128465;</p>
+            <!-- emsp: em space (wider than usual) ; bull: • ; 128465: 🗑 -->
         </div>
     </template>
 
@@ -79,5 +80,11 @@
     #edit,
     #delete {
         display: inline;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        body {
+            background-color: #121212;
+        }
     }
 </style>
