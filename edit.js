@@ -25,7 +25,7 @@ if (window.location.href.includes("?")) {
     title.value = conference.title
     notes.value = conference.notes
     link.value = conference.link
-    start.value = starttime.toJSON().slice(0, 16)
+    start.value = moment(starttime).format('YYYY-MM-DDTHH:mm')
 
 
     // Set the length input to the event's length
@@ -88,7 +88,7 @@ function saveThis() {
     conference.notes = notes.value.trim()
     conference.platforms = platform.value
     conference.link = link.value.trim()
-    conference.starttime = new Date(start.value).getTime()
+    conference.starttime = moment(start.value).valueOf()
     conference.endtime = conference.starttime + (length.value * 60 * 1000)
 
     // Don't continue if no title or date is specified

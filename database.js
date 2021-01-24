@@ -54,6 +54,8 @@ function save(conference, callback) {
             // If there's already a conference with the same id, update it
             conferences[itemIndex] = conference
             id = conference.id
+            // Cancel the currently pending alarm
+            chrome.alarms.clear(conference.id.toString(), () => { })
         } else {
             // Else add this conference to the list
             conferences.push(conference)
@@ -66,8 +68,11 @@ function save(conference, callback) {
             // will not be affected by this
             chrome.storage.sync.set(
                 { "conferences": conferences },
-                callback
-            )
+                () => {
+                    // Create an alarm 15 minutes prior to start date
+                    chrome.alarms.create(conference.id.toString(), { when: conference.starttime - (15 * 60 * 1000) })
+                    callback()
+                })
         })
     })
 }

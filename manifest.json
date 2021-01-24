@@ -15,7 +15,9 @@
     "permissions": [
         "contextMenus",
         "storage",
-        "identity"
+        "identity",
+        "alarms",
+        "notifications"
     ],
     "icons": {
         "16": "16.png",

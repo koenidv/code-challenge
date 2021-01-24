@@ -42,7 +42,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 
 
 // On context menu item clicked
-chrome.contextMenus.onClicked.addListener((info, tab) => {
+chrome.contextMenus.onClicked.addListener((info) => {
 
     // Get the next free index for saving
     getNextIndex((index) => {
@@ -105,4 +105,25 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
     })
 
+})
+
+/*
+ * Listen for alarms to show a notification
+ */
+chrome.alarms.onAlarm.addListener((alarm) => {
+    console.log("Showing alarm for " + alarm.name + " at " + alarm.scheduledTime)
+    // Get the corresponding conference
+    getById(alarm.name, (conference) => {
+        console.log(conference)
+        // Show a notification
+        chrome.notifications.create(conference.id.toString(), {
+            title: conference.title,
+            message: "Get ready for your conference in about 15 minutes!",
+            contextMessage: conference.notes,
+            iconUrl: "128.png",
+            eventTime: conference.starttime,
+            requireIntercation: true,
+            type: "basic"
+        }, () => { })
+    })
 })
