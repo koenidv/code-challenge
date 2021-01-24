@@ -20,11 +20,13 @@ function get(callback) {
 }
 
 /**
-* Remove old conferences, then get all current ones
+* Remove old conferences, then get all current ones, sorted by their date
 */
 function getCurrent(callback) {
     removeOld(() => {
-        get(callback)
+        get( (conferences) => {
+            callback(conferences.sort( (a, b) => a.starttime - b.starttime))
+        })
     })
 }
 
