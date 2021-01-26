@@ -81,6 +81,10 @@ function appendPlatform(name) {
     // of items so we can recognize it later
     let index = container.childElementCount
     innerContent.id = index
+    // Disable editing if this is "Other"
+    deleteButton.disabled = (name == "Other")
+    input.disabled = (name == "Other")
+
     // Apppend a clone of the template
     container.appendChild(document.importNode(template, true))
 
@@ -99,11 +103,14 @@ function appendPlatform(name) {
     // Name input, changes this platforms name
     document.querySelector(`[id="${index}"] #platformName`)
         .onchange = function () {
-            // Update the platform in storage
-            console.log(name + ", " + this.value)
-            updatePlatform(name, this.value)
-            // Update name for the next change
-            named = this.value
+            // User should not be able to create a platform "Other"
+            if (this.value.trim().toLowerCase() != "Other") {
+                // Update the platform in storage
+                console.log(name + ", " + this.value)
+                updatePlatform(name, this.value.trim())
+                // Update name for the next change
+                name = this.value.trim()
+            }
         }
     // Focus the new input so the user can edit right away
     document.querySelector(`[id="${index}"] #platformName`).focus()
@@ -119,6 +126,7 @@ function appendPlatform(name) {
 function updatePlatform(oldname, newname) {
     // Get all current platforms
     chrome.storage.sync.get("platforms", (items) => {
+        console.log(items)
         // Get the first index of a platform matching oldname
         let index = items.platforms.indexOf(oldname)
         if (index == -1) {
