@@ -1,30 +1,42 @@
 <!DOCTYPE html>
 
 <body>
-    <p>Calendar integration</p>
+    <label>Calendar integration</label>
     <button id="connectCalendar">Connect to Google Calendar</button>
-    <p>Default conference length (minutes)</p>
+    <label>Default conference length (minutes)</label>
     <input id="defaultLength" type="number" placeholder="Length in minutes">
-    <p>Conferencing platforms</p>
+    <label>Conferencing platforms</label>
     <div id="platforms">
         <template id="platformTempl">
             <div id="platform">
                 <input id="platformName" placeholder="Platform name">
-                <button id="deleteButton">X</button>
+                <button id="deleteButton">&#x274C;</button> <!-- 274c: ❌ -->
             </div>
         </template>
     </div>
-    <button id="newPlatformButton">Add a platform...</button>
+    <button id="newPlatformButton">&#x2795; Add a platform</button> <!-- 2795: ➕ -->
 
     <script src="options.js"></script>
 </body>
 
 <style>
-    p,
+    body {
+        overflow-x: hidden;
+    }
+
+    label {
+        display: inline-block;
+        margin-bottom: 0.2rem;
+    }
+
+    label:not(:first-of-type) {
+        margin-top: 0.6rem;
+    }
+
     body>input,
     body>button {
         width: 100%;
-        margin: 0.5rem 0;
+        margin: 0.25rem 0;
     }
 
     #platforms input {
@@ -36,6 +48,40 @@
     #platforms button {
         width: 1rem;
         margin: 0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+
+        body,
+        option {
+            background-color: #121212;
+            color: #aeaeae;
+        }
+
+        /* Overriding Chrome's default stylesheet here */
+        input,
+        button {
+            background: #121212 !important;
+            color: white !important;
+            border-color: #aeaeae !important;
+            box-shadow: none !important;
+            text-shadow: none !important;
+        }
+
+        input:disabled,
+        button:disabled {
+            color: gray !important;
+            border-color: #404040 !important;
+        }
+
+        .input.error {
+            background-color: #7f194a80;
+        }
+
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+
     }
 </style>
 

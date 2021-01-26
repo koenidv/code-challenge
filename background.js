@@ -92,8 +92,6 @@ chrome.contextMenus.onClicked.addListener((info) => {
             if (matches) {
                 day = matches.groups.day
                 month = matches.groups.month
-                console.log("DAY " + day)
-                console.log("MONTH " + month)
             }
 
             // Try getting a time like hour:minute (period)
@@ -106,9 +104,6 @@ chrome.contextMenus.onClicked.addListener((info) => {
                 hour = matches.groups.hour
                 minute = matches.groups.minute ?? 0
                 period = matches.groups.period
-                console.log("HOUR " + hour)
-                console.log("MINUTE " + minute)
-                console.log("PERIOD " + period)
             }
 
             // Convert 12h to 24h

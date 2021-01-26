@@ -1,8 +1,9 @@
 
 var calendarSignedIn = false
+let calendarButton = document.querySelector("#connectCalendar")
 
 // Setup connect google calendar button
-document.querySelector("#connectCalendar").onclick = function () {
+calendarButton.onclick = function () {
     if (calendarSignedIn) {
         // Sign out
         // Get the current auth token
@@ -13,15 +14,24 @@ document.querySelector("#connectCalendar").onclick = function () {
                     // Clear identity cache
                     chrome.identity.clearAllCachedAuthTokens(() => {
                         calendarSignedIn = false
-                        document.querySelector("#connectCalendar").textContent = "\u{1f4c5} Connect to Google Calendar" // 1f4c5: 📅
+                        calendarButton.textContent = "\u{1f4c5} Connect to Google Calendar" // 1f4c5: 📅
                     })
                 })
         })
     } else {
+        calendarButton.textContent = "\u231b Connecting" // 231b: ⌛
         // Let the user sign in with OAuth
         chrome.identity.getAuthToken({ 'interactive': true }, () => {
-            calendarSignedIn = true
-            document.querySelector("#connectCalendar").textContent = "\u274c Disconnect from Google Calendar" // 274c: ❌
+            // Update signed in state accordingly
+            if (!chrome.runtime.lastError) {
+                // Sign in success
+                calendarSignedIn = true
+                calendarButton.textContent = "\u274c Disconnect from Google Calendar" // 274c: ❌
+            } else {
+                // Sign in failed
+                calendarSignedIn = false
+                calendarButton.textContent = "\u{1f4c5} Connect to Google Calendar" // 1f4c5: 📅
+            }
         })
     }
 }
@@ -31,10 +41,10 @@ document.querySelector("#connectCalendar").onclick = function () {
 chrome.identity.getAuthToken({ "interactive": false }, () => {
     if (chrome.runtime.lastError) {
         calendarSignedIn = false
-        document.querySelector("#connectCalendar").textContent = "\u{1f4c5} Connect to Google Calendar" // 1f4c5: 📅
+        calendarButton.textContent = "\u{1f4c5} Connect to Google Calendar" // 1f4c5: 📅
     } else {
         calendarSignedIn = true
-        document.querySelector("#connectCalendar").textContent = "\u274c Disconnect from Google Calendar" // 274c: ❌
+        calendarButton.textContent = "\u274c Disconnect from Google Calendar" // 274c: ❌
     }
 })
 
