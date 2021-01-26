@@ -50,20 +50,11 @@ chrome.contextMenus.onClicked.addListener((info) => {
         // We'll also need a list of used platforms
         chrome.storage.sync.get("platforms", (items) => {
 
-            // testing, use now as startdate
-            // and now + 90 minutes as enddate
-            let now = new Date().getTime()
-            let then = now + 90 * 60 * 1000
-
             // Create new Conference object
             var thisConference = new Conference(
                 index,
-                null,
-                null,
-                null,
-                null,
-                info.pageUrl,
-                now, then)
+                info.pageUrl
+            )
 
             // Try getting some values from the selected text
 
@@ -91,26 +82,50 @@ chrome.contextMenus.onClicked.addListener((info) => {
             thisConference.platform = thisConference.platform ?? "Other"
 
             // Try getting a date
-            // like month/day (or m\d, m-d) or like (d.m)
-            // Assign variables within the if statement so match is only run once
-            // and we can use if/else
-            let matches
-            if (matches = /(?:\D|^)(?<month>[0-1]?[1-2])(?:\/|\\|-)(?<day>[0-2]?[0-9]|3[0-1])(?:\D|$)/g.exec(info.selectionText)) {
-                console.log("DAY " + matches.groups.day)
-                console.log("MONTH " + matches.groups.month)
-            } else if (matches = /(?:^|\D)(?<day>[0-2]?[0-9]|3[0-1]).(?<month>[0-1]?[1-2])(?:\D|$)/g.exec(info.selectionText)) {
-                console.log("DAY " + matches.groups.day)
-                console.log("MONTH " + matches.groups.month)
+            // like month/day (or m\d, m-d) or if that returns null like (d.m)
+            let month, day, hour, minute, period
+            let date = new Date()
+            let matches =
+                /(?:\D|^)(?<month>[0-1]?[1-2])(?:\/|\\|-)(?<day>[0-2]?[0-9]|3[0-1])(?:\D|$)/g.exec(info.selectionText)
+                ?? /(?:^|\D)(?<day>[0-2]?[0-9]|3[0-1]).(?<month>[0-1]?[1-2])(?:\D|$)/g.exec(info.selectionText)
+
+            if (matches) {
+                day = matches.groups.day
+                month = matches.groups.month
+                console.log("DAY " + day)
+                console.log("MONTH " + month)
             }
 
-            // Try getting a time like hour:minute
-            matches = /(?:\D|^)(?<hour>[0-1]?[0-9]|2[0-3]):(?<minute>[0-5]?[0-9])(?:\D|$)(?:(?<period>(?:a|p))\.?m\.?|p\.?m\.?)?/gi.exec(info.selectionText)
+            // Try getting a time like hour:minute (period)
+            // or like hour period
+            matches =
+                /(?:\D|^)(?<hour>[0-1]?[0-9]|2[0-3]):(?<minute>[0-5]?[0-9])(?:\D|$)(?:(?<period>(?:a|p))\.?m\.?|p\.?m\.?)?/gi.exec(info.selectionText)
+                ?? /(?:\D|^)(?<hour>[0-1]?[0-9]|2[0-3])\s(?<period>(?:a|p))\.?m\.?|p\.?m\.?/gi.exec(info.selectionText)
+
             if (matches) {
-                console.log("HOUR " + matches.groups.hour)
-                console.log("MINUTE " + matches.groups.minute)
-                console.log("PERIOD " + matches.groups.period)
+                hour = matches.groups.hour
+                minute = matches.groups.minute ?? 0
+                period = matches.groups.period
+                console.log("HOUR " + hour)
+                console.log("MINUTE " + minute)
+                console.log("PERIOD " + period)
             }
-            
+
+            // Convert 12h to 24h
+            if (period == "p" && hour > 12) hour += 12
+
+            // Add found values to the conference
+            // If some values could not be found, mark as iffy date
+            if (month != undefined) date.setMonth(month - 1)
+            else thisConference.iffydate = true
+            if (day != undefined) date.setDate(day)
+            else thisConference.iffydate = true
+            if (hour != undefined) date.setHours(hour)
+            else thisConference.iffydate = true
+            if (minute != undefined) date.setMinutes(minute)
+            else thisConference.iffydate = true
+
+            thisConference.starttime = date.getTime()
 
             console.log(thisConference)
 

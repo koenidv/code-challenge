@@ -27,6 +27,8 @@ if (window.location.href.includes("?")) {
     link.value = conference.link
     start.value = moment(starttime).format('YYYY-MM-DDTHH:mm')
 
+    // If date is iffy, highlight date picker
+    if (conference.iffydate) start.classList.add("error")
 
     // Set the length input to the event's length
     // or the default value from sync storage
