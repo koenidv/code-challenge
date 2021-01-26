@@ -5,15 +5,15 @@
 </head>
 
 <body>
-    <label>Conference Details</label>
+    <label>Basic Information</label>
     <input class="input" id="title" type="text" placeholder="Title">
-    <textarea class="input" id="notes" name="notes" type="text" placeholder="Your notes"></textarea>
-    <label>Platform and Link</label>
+    <input class="input" id="startTime" type="datetime-local">
+    <label>Platform</label>
     <select class="input" id="platform"></select>
     <input class="input" id="conferenceLink" type="url" placeholder="Conference Link">
-    <label>Date and Time</label>
-    <input class="input" id="startTime" type="datetime-local">
-    <input class="input" id="length" type="number">
+    <label>Details</label>
+    <textarea class="input" id="notes" name="notes" type="text" placeholder="Your notes"></textarea>
+    <input class="input" id="length" type="number" placeholder="Conference length in minutes">
 
     <button id="saveButton">Save</button>
 
@@ -41,7 +41,12 @@
     }
 
     label {
-        margin-top: 2rem;
+        display: inline-block;
+        margin-bottom: 0.2rem;
+    }
+
+    label:not(:first-of-type) {
+        margin-top: 0.6rem;
     }
 
     .input {
@@ -88,7 +93,9 @@
     }
 
     @media (prefers-color-scheme: dark) {
-        body {
+
+        body,
+        option {
             background-color: #121212;
             color: #aeaeae;
         }
