@@ -90,6 +90,28 @@ chrome.contextMenus.onClicked.addListener((info) => {
             // If no platform was found, set to Other
             thisConference.platform = thisConference.platform ?? "Other"
 
+            // Try getting a date
+            // like month/day (or m\d, m-d) or like (d.m)
+            // Assign variables within the if statement so match is only run once
+            // and we can use if/else
+            let matches
+            if (matches = /(?:\D|^)(?<month>[0-1]?[1-2])(?:\/|\\|-)(?<day>[0-2]?[0-9]|3[0-1])(?:\D|$)/g.exec(info.selectionText)) {
+                console.log("DAY " + matches.groups.day)
+                console.log("MONTH " + matches.groups.month)
+            } else if (matches = /(?:^|\D)(?<day>[0-2]?[0-9]|3[0-1]).(?<month>[0-1]?[1-2])(?:\D|$)/g.exec(info.selectionText)) {
+                console.log("DAY " + matches.groups.day)
+                console.log("MONTH " + matches.groups.month)
+            }
+
+            // Try getting a time like hour:minute
+            matches = /(?:\D|^)(?<hour>[0-1]?[0-9]|2[0-3]):(?<minute>[0-5]?[0-9])(?:\D|$)(?:(?<period>(?:a|p))\.?m\.?|p\.?m\.?)?/gi.exec(info.selectionText)
+            if (matches) {
+                console.log("HOUR " + matches.groups.hour)
+                console.log("MINUTE " + matches.groups.minute)
+                console.log("PERIOD " + matches.groups.period)
+            }
+            
+
             console.log(thisConference)
 
             // Open a new window letting the user
