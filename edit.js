@@ -84,6 +84,8 @@ saveBtn.onclick = function () {
 
 function saveThis() {
     let valid = true
+    title.classList.remove("error")
+    start.classList.remove("error")
 
     // Update conference object with the respective inputs
     conference.title = title.value.trim()
@@ -94,11 +96,13 @@ function saveThis() {
     conference.endtime = conference.starttime + (length.value * 60 * 1000)
 
     // Don't continue if no title or date is specified
+    // Also don't continue if date is in the past
     if (!conference.title) {
         title.classList.add("error")
         valid = false
     }
-    if (!start.value) {
+    if (!start.value
+        || conference.starttime < moment().valueOf()) {
         start.classList.add("error")
         valid = false
     }
