@@ -90,7 +90,7 @@ function saveThis() {
     // Update conference object with the respective inputs
     conference.title = title.value.trim()
     conference.notes = notes.value.trim()
-    conference.platforms = platform.value
+    conference.platform = platform.value
     conference.link = link.value.trim()
     conference.starttime = moment(start.value).valueOf()
     conference.endtime = conference.starttime + (length.value * 60 * 1000)

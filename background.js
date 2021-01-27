@@ -97,14 +97,14 @@ chrome.contextMenus.onClicked.addListener((info) => {
                 month = matches.groups.month
 
                 // If month is integer, subtract 1 (0 => Jan)
-                if (Number.isInteger(month)) month--
+                if (!isNaN(month)) month--
 
                 // Add found values to the conference
                 // If some values could not be found, mark as iffy date
                 datetime.month(month)
                 datetime.date(date)
 
-            } else if (matches = /(?:\W|^)(?<isnext>next)?\s(?<day>Mon\w*|Tue\w*|Wed\w*|Thu\w*|Fri\w*|Sat\w*|Sun\w*)/gi.exec(info.selectionText)) {
+            } else if (matches = /(?<isnext>next)?\s(?<day>Mon\w*|Tue\w*|Wed\w*|Thu\w*|Fri\w*|Sat\w*|Sun\w*)/gi.exec(info.selectionText)) {
                 const dateNow = datetime.date(), monthNow = datetime.month()
                 // Set specified weekday
                 datetime.day(matches.groups.day)
@@ -188,7 +188,9 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 chrome.notifications.onClicked.addListener((notificationId) => {
     // Get the corresponding conference
     getById(notificationId, (conference) => {
-        // Open its link in a new tab
-        chrome.tabs.create({ url: conference.link })
+        if (conference.link) {
+            // Open its link in a new tab
+            chrome.tabs.create({ url: conference.link })
+        }
     })
 })

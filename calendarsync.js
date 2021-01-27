@@ -105,7 +105,6 @@ function deleteEvent(id) {
 
             // Return if an error occurred, like if the user isn't signed in
             if (chrome.runtime.lastError) {
-                callback();
                 return;
             }
 

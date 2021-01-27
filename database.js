@@ -50,7 +50,7 @@ function save(conference, callback) {
         // conferences: Conference[]
 
         // Make sure conference link is absolute
-        if (!conference.link.match(/https?:\/\//))  {
+        if (!conference.link.match(/https?:\/\//) && conference.link)  {
             conference.link = "https://" + conference.link
         }
 
@@ -91,7 +91,7 @@ function remove(id) {
     // Get currently saved conferences
     get((conferences) => {
         // Get the item's index within the array
-        let index = conferences.find(element => element.id == id)
+        let index = conferences.findIndex(element => element.id == id)
         // If the items was found, remove it from the array and save the array
         // Also delete from calendar
         if (index != -1) {
@@ -107,7 +107,6 @@ function remove(id) {
  * Removes all conferences with a past end time
  */
 function removeOld(callback) {
-    console.log("Remove old")
     // Get currently saved conferences and time
     get((conferences) => {
         const timenow = (new Date()).getTime()
