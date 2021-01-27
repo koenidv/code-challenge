@@ -26,6 +26,7 @@ chrome.runtime.onInstalled.addListener((details) => {
                         "Big Blue Button",
                         "Zoom",
                         "Moodle",
+                        "Antares",
                         "Other"
                     ]
                 }, () => { })
@@ -82,16 +83,43 @@ chrome.contextMenus.onClicked.addListener((info) => {
             thisConference.platform = thisConference.platform ?? "Other"
 
             // Try getting a date
-            // like month/day (or m\d, m-d) or if that returns null like (d.m)
-            let month, day, hour, minute, period
-            let date = new Date()
+            // like month/day (or m\d, m-d) or if that returns null like (d.m) or (mmm d)
+            // If that also returns null try relative dates like (next? ddd) or (today/tomorrow)
+            let month, date, hour, minute, period
+            let datetime = moment()
             let matches =
-                /(?:\D|^)(?<month>[0-1]?[1-2])(?:\/|\\|-)(?<day>[0-2]?[0-9]|3[0-1])(?:\D|$)/g.exec(info.selectionText)
-                ?? /(?:^|\D)(?<day>[0-2]?[0-9]|3[0-1]).(?<month>[0-1]?[1-2])(?:\D|$)/g.exec(info.selectionText)
+                /(?:\D|^)(?<month>[0-1]?[1-2])(?:\/|\\|-)(?<date>[0-2]?[0-9]|3[0-1])(?:\D|$)/g.exec(info.selectionText)
+                ?? /(?:^|\D)(?<date>[0-2]?[0-9]|3[0-1]).(?<month>[0-1]?[1-2])(?:\D|$)/g.exec(info.selectionText)
+                ?? /(?<month>Jan\w*|Feb\w*|Mar\w*|Apr\w*|May|Jun\w?|Jul\w?|Aug\w*|Sep\w*|Oct\w*|Nov\w*|Dec\w*)\s(?<date>[0-2]?[0-9]|3[0-1])(?:\D|$)/gi.exec(info.selectionText)
 
             if (matches) {
-                day = matches.groups.day
+                date = matches.groups.date
                 month = matches.groups.month
+
+                // If month is integer, subtract 1 (0 => Jan)
+                if (Number.isInteger(month)) month--
+
+                // Add found values to the conference
+                // If some values could not be found, mark as iffy date
+                datetime.month(month)
+                datetime.date(date)
+
+            } else if (matches = /(?:\W|^)(?<isnext>next)?\s(?<day>Mon\w*|Tue\w*|Wed\w*|Thu\w*|Fri\w*|Sat\w*|Sun\w*)/gi.exec(info.selectionText)) {
+                const dateNow = datetime.date(), monthNow = datetime.month()
+                // Set specified weekday
+                datetime.day(matches.groups.day)
+                // Add a week if the day has already gone by or "next" was specified
+                if (matches.groups.isnext
+                    || (dateNow > datetime.date() && monthNow == datetime.month())) {
+                    datetime.add(7, "days")
+                }
+            } else if (matches = /(?:\W|^)(?<daterelative>today|tomorrow)(?:\W|$)/gi.exec(info.selectionText)) {
+                // If daterelative is today, leave datetime as it is, if it's tomorrow, add a day
+                if (matches.groups.daterelative == "tomorrow") {
+                    datetime.add(1, "days")
+                }
+            } else {
+                thisConference.iffydate = true
             }
 
             // Try getting a time like hour:minute (period)
@@ -104,23 +132,19 @@ chrome.contextMenus.onClicked.addListener((info) => {
                 hour = matches.groups.hour
                 minute = matches.groups.minute ?? 0
                 period = matches.groups.period
+
+                // Convert 12h to 24h
+                if (period == "p" && hour > 12) hour += 12
+
+                // Add found values to the conference
+                // If some values could not be found, mark as iffy date
+                datetime.hours(hour)
+                datetime.minutes(minute)
+            } else {
+                thisConference.iffydate = true
             }
 
-            // Convert 12h to 24h
-            if (period == "p" && hour > 12) hour += 12
-
-            // Add found values to the conference
-            // If some values could not be found, mark as iffy date
-            if (month != undefined) date.setMonth(month - 1)
-            else thisConference.iffydate = true
-            if (day != undefined) date.setDate(day)
-            else thisConference.iffydate = true
-            if (hour != undefined) date.setHours(hour)
-            else thisConference.iffydate = true
-            if (minute != undefined) date.setMinutes(minute)
-            else thisConference.iffydate = true
-
-            thisConference.starttime = date.getTime()
+            thisConference.starttime = datetime.valueOf()
 
             console.log(thisConference)
 
