@@ -6,10 +6,10 @@
     "background": {
         "scripts": [
             "background.js",
-            "Conference.js",
-            "database.js",
-            "calendarsync.js",
-            "moment.min.js"
+            "util/Conference.js",
+            "util/database.js",
+            "util/calendarsync.js",
+            "lib/moment.min.js"
         ],
         "persistent": false
     },
@@ -21,15 +21,15 @@
         "notifications"
     ],
     "icons": {
-        "16": "16.png",
-        "128": "128.png",
-        "256": "256.png"
+        "16": "assets/16.png",
+        "128": "assets/128.png",
+        "256": "assets/256.png"
     },
     "browser_action": {
-        "default_popup": "popup.html"
+        "default_popup": "popup/popup.html"
     },
     "options_ui": {
-        "page": "options.html",
+        "page": "options/options.html",
         "chrome_style": true
     },
     "oauth2": {
