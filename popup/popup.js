@@ -62,7 +62,7 @@ function setOnClicks() {
         getById(this.parentNode.id, (it) => {
             // Open a new window letting the user edit the conference
             chrome.windows.create({
-                url: chrome.extension.getURL("edit.html")
+                url: chrome.extension.getURL("edit/edit.html")
                     + "?" + escape(JSON.stringify(it)),
                 focused: true,
                 type: "popup"

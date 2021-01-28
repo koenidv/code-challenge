@@ -151,7 +151,7 @@ chrome.contextMenus.onClicked.addListener((info) => {
             // Open a new window letting the user
             // add data that couldn't be found
             chrome.windows.create({
-                url: chrome.extension.getURL("edit.html")
+                url: chrome.extension.getURL("edit/edit.html")
                     + "?" + escape(JSON.stringify(thisConference)),
                 focused: true,
                 type: "popup"
@@ -175,7 +175,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         chrome.notifications.create(conference.id.toString(), {
             title: conference.title,
             message: `Get ready for your conference on ${conference.platform}!\r\n${conference.notes}`,
-            iconUrl: "128.png",
+            iconUrl: "/assets/256.png",
             eventTime: conference.starttime,
             type: "basic"
         }, () => { })

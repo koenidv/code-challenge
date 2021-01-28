@@ -63,7 +63,7 @@ function insertEvent(conference, idToUpdate, callback) {
                     console.log(text);
                     // Callback if request was successfull,
                     // else try one more time with a fresh token
-                    if (text.ok) callback
+                    if (text.ok) callback()
                     else runRetry(token)
                 })
                 .catch((error) => {

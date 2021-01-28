@@ -1,6 +1,6 @@
 {
     "name": "Conference Planner",
-    "version": "0.1",
+    "version": "1.0",
     "description": "Organize all your video conferences with just a few clicks",
     "manifest_version": 2,
     "background": {
