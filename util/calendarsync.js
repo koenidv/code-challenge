@@ -20,7 +20,7 @@ function insertEvent(conference, idToUpdate, callback) {
 
             // Calendar event data
             const data = {
-                "id": "conferenceplanner" + conference.id,
+                "id": "conferenceplannerdemo" + conference.id,
                 "summary": conference.title,
                 "description": conference.link + "<br>Via Conference Planner<br><a href='" + conference.foundlink + "'>See original post</a><br><br>" + conference.notes,
                 "location": conference.platform,
@@ -42,7 +42,7 @@ function insertEvent(conference, idToUpdate, callback) {
             // Use post for create, put for update and set url accordingly
             let url = "https://www.googleapis.com/calendar/v3/calendars/primary/events"
             let method = "post"
-            if (idToUpdate) {
+            if (idToUpdate != null) {
                 url += "/conferenceplanner" + conference.id
                 method = "put"
             }
