@@ -20,7 +20,7 @@ function insertEvent(conference, idToUpdate, callback) {
 
             // Calendar event data
             const data = {
-                "id": "conferenceplannerdemo" + conference.id,
+                "id": "conferenceplanner" + conference.id,
                 "summary": conference.title,
                 "description": conference.link + "<br>Via Conference Planner<br><a href='" + conference.foundlink + "'>See original post</a><br><br>" + conference.notes,
                 "location": conference.platform,
